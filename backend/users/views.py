@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.auth import login, logout
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from django.contrib.auth.hashers import check_password
 from django.core.paginator import Paginator
 from .serializers import UserSerializer, LoginSerializer, UserUpdateSerializer, ChangePasswordSerializer
@@ -57,8 +58,21 @@ def login_view(request):
 
 @api_view(['POST'])
 def logout_view(request):
-    logout(request)
-    return Response({'message': 'Successfully logged out'}, status=status.HTTP_200_OK)
+    try:
+        # Get the refresh token from the request
+        refresh_token = request.data.get('refresh')
+
+        if refresh_token:
+            # Blacklist the refresh token
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+        # Also logout the session (if using sessions)
+        logout(request)
+
+        return Response({'message': 'Successfully logged out'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': 'Failed to logout'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

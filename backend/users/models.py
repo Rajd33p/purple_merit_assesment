@@ -18,8 +18,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         default="Inactive"
     )
 
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
 
     last_login = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)

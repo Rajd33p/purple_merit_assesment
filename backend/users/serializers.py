@@ -40,3 +40,19 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Email and password are required.')
 
         return attrs
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'full_name', 'updated_at')
+        read_only_fields = ('email', 'updated_at')
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, min_length=8)
+
+    def validate_new_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("Password must be at least 8 characters long.")
+        return value

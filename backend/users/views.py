@@ -5,8 +5,14 @@ from rest_framework.response import Response
 from django.contrib.auth import login, logout
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
+from django.core.paginator import Paginator
 from .serializers import UserSerializer, LoginSerializer, UserUpdateSerializer, ChangePasswordSerializer
 from .models import User
+
+
+def is_admin_user(user):
+    """Check if user has admin role"""
+    return user.role == 'admin'
 
 
 @api_view(['POST'])
@@ -95,3 +101,65 @@ def change_password(request):
         return Response({'message': 'Password changed successfully'})
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Admin endpoints
+@api_view(['GET'])
+def list_users(request):
+    # Check if user is admin
+    if not is_admin_user(request.user):
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+
+    page = request.query_params.get('page', 1)
+
+    users = User.objects.all().order_by('id')
+
+    # Paginate users (10 per page as specified)
+    paginator = Paginator(users, 10)
+    paginated_users = paginator.get_page(page)
+
+    serializer = UserSerializer(paginated_users, many=True)
+
+    # Return paginated response
+    return Response({
+        'users': serializer.data,
+        'total_pages': paginator.num_pages,
+        'current_page': int(page),
+        'total_users': paginator.count
+    })
+
+
+@api_view(['PATCH'])
+def activate_user(request, user_id):
+    # Check if user is admin
+    if not is_admin_user(request.user):
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    user.status = 'active'
+    user.save()
+
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
+
+
+@api_view(['PATCH'])
+def deactivate_user(request, user_id):
+    # Check if user is admin
+    if not is_admin_user(request.user):
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    user.status = 'inactive'
+    user.save()
+
+    serializer = UserSerializer(user)
+    return Response(serializer.data)

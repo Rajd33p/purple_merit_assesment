@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../api/axios';
 import { useToast } from '../context/ToastContext';
 import Navbar from '../components/Navbar';
@@ -8,11 +8,13 @@ import Modal from '../components/Modal';
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
     count: 0,
   });
+  const searchTimeoutRef = useRef(null);
   const [modalData, setModalData] = useState({ isOpen: false, user: null, action: '' });
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -21,7 +23,11 @@ const AdminDashboard = () => {
   const fetchUsers = async (page = 1) => {
     setLoading(true);
     try {
-      const response = await api.get(`/admin/users/?page=${page}`);
+      let url = `/admin/users/?page=${page}`;
+      if (searchTerm) {
+        url += `&search=${encodeURIComponent(searchTerm)}`;
+      }
+      const response = await api.get(url);
       const data = response.data;
       setUsers(data.users);
       setPagination({
@@ -38,6 +44,15 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchUsers();
+  }, []);
+
+  // Clean up timeout on component unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
   }, []);
 
   const handlePageChange = (newPage) => {
@@ -90,8 +105,35 @@ const AdminDashboard = () => {
       <main className="page">
         <div className="container">
           <div className="page-header">
-            <h1 className="page-title">Admin Dashboard</h1>
-            <p className="page-subtitle">Manage user accounts and permissions</p>
+            <div className="page-header-content">
+              <div className="header-text">
+                <h1 className="page-title">Admin Dashboard</h1>
+                <p className="page-subtitle">Manage user accounts and permissions</p>
+              </div>
+              <div className="search-container">
+                <input
+                  type="text"
+                  className="form-input search-input"
+                  placeholder="Search users..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSearchTerm(value);
+
+                    // Clear the previous timeout
+                    if (searchTimeoutRef.current) {
+                      clearTimeout(searchTimeoutRef.current);
+                    }
+
+                    // Set a new timeout to fetch users after 500ms of inactivity
+                    searchTimeoutRef.current = setTimeout(() => {
+                      setPagination(prev => ({ ...prev, currentPage: 1 })); // Reset to first page
+                      fetchUsers(1);
+                    }, 500);
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
           {loading ? (

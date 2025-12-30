@@ -7,6 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from django.contrib.auth.hashers import check_password
 from django.core.paginator import Paginator
+from django.db.models import Q
 from .serializers import UserSerializer, LoginSerializer, UserUpdateSerializer, ChangePasswordSerializer
 from .models import User
 
@@ -124,9 +125,23 @@ def list_users(request):
     if not is_admin_user(request.user):
         return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
 
+    # Get page number from query parameters, default to 1
     page = request.query_params.get('page', 1)
 
-    users = User.objects.all().order_by('id')
+    # Get search query from query parameters
+    search = request.query_params.get('search', '')
+
+    # Get all users
+    users = User.objects.all()
+
+    # Apply search filter if search query is provided
+    if search:
+        users = users.filter(
+            Q(email__icontains=search) |
+            Q(full_name__icontains=search)
+        ).order_by('id')
+    else:
+        users = users.order_by('id')
 
     # Paginate users (10 per page as specified)
     paginator = Paginator(users, 10)

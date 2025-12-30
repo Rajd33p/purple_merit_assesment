@@ -87,6 +87,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #     }
 # }
 
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",

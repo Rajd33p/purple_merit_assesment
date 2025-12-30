@@ -7,3 +7,4 @@ backend/.env
 backend/config/__pycache__/
 backend/users/__pycache__/
 backend/users/migrations/__pycache__/
+frontend/.env

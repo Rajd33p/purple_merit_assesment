@@ -165,7 +165,7 @@ const UserProfile = () => {
     <>
       <Navbar />
       <main className="page">
-        <div className="container" style={{ maxWidth: '600px' }}>
+        <div className="container profile-container">
           <div className="page-header">
             <h1 className="page-title">My Profile</h1>
             <p className="page-subtitle">Manage your account information</p>
@@ -189,105 +189,107 @@ const UserProfile = () => {
             </div>
           </div>
 
-          <div className="card" style={{ marginBottom: 'var(--spacing-xl)' }}>
-            <div className="profile-section">
-              <h2 className="profile-section-title">Edit Profile</h2>
-              <form onSubmit={handleProfileSubmit}>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="fullName">Full Name</label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    className={`form-input ${profileErrors.fullName ? 'error' : ''}`}
-                    value={profileData.fullName}
-                    onChange={handleProfileChange}
-                    disabled={profileLoading}
-                  />
-                  {profileErrors.fullName && <p className="form-error">{profileErrors.fullName}</p>}
-                </div>
+          <div className="profile-forms-grid">
+            <div className="card">
+              <div className="profile-section">
+                <h2 className="profile-section-title">Edit Profile</h2>
+                <form onSubmit={handleProfileSubmit}>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="fullName">Full Name</label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      className={`form-input ${profileErrors.fullName ? 'error' : ''}`}
+                      value={profileData.fullName}
+                      onChange={handleProfileChange}
+                      disabled={profileLoading}
+                    />
+                    {profileErrors.fullName && <p className="form-error">{profileErrors.fullName}</p>}
+                  </div>
 
-                <div className="form-group">
-                  <label className="form-label" htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className={`form-input ${profileErrors.email ? 'error' : ''}`}
-                    value={profileData.email}
-                    onChange={handleProfileChange}
-                    disabled={profileLoading}
-                  />
-                  {profileErrors.email && <p className="form-error">{profileErrors.email}</p>}
-                </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className={`form-input ${profileErrors.email ? 'error' : ''}`}
+                      value={profileData.email}
+                      onChange={handleProfileChange}
+                      disabled={profileLoading}
+                    />
+                    {profileErrors.email && <p className="form-error">{profileErrors.email}</p>}
+                  </div>
 
-                <div className="action-buttons">
-                  <button type="submit" className="btn btn-primary" disabled={profileLoading}>
-                    {profileLoading ? 'Saving...' : 'Save Changes'}
-                  </button>
-                  <button type="button" className="btn btn-secondary" onClick={resetProfile} disabled={profileLoading}>
-                    Cancel
-                  </button>
-                </div>
-              </form>
+                  <div className="action-buttons">
+                    <button type="submit" className="btn btn-primary" disabled={profileLoading}>
+                      {profileLoading ? 'Saving...' : 'Save Changes'}
+                    </button>
+                    <button type="button" className="btn btn-secondary" onClick={resetProfile} disabled={profileLoading}>
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
 
-          <div className="card">
-            <div className="profile-section">
-              <h2 className="profile-section-title">Change Password</h2>
-              <form onSubmit={handlePasswordSubmit}>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="currentPassword">Current Password</label>
-                  <input
-                    type="password"
-                    id="currentPassword"
-                    name="currentPassword"
-                    className={`form-input ${passwordErrors.currentPassword ? 'error' : ''}`}
-                    value={passwordData.currentPassword}
-                    onChange={handlePasswordChange}
-                    disabled={passwordLoading}
-                  />
-                  {passwordErrors.currentPassword && <p className="form-error">{passwordErrors.currentPassword}</p>}
-                </div>
+            <div className="card">
+              <div className="profile-section">
+                <h2 className="profile-section-title">Change Password</h2>
+                <form onSubmit={handlePasswordSubmit}>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="currentPassword">Current Password</label>
+                    <input
+                      type="password"
+                      id="currentPassword"
+                      name="currentPassword"
+                      className={`form-input ${passwordErrors.currentPassword ? 'error' : ''}`}
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordChange}
+                      disabled={passwordLoading}
+                    />
+                    {passwordErrors.currentPassword && <p className="form-error">{passwordErrors.currentPassword}</p>}
+                  </div>
 
-                <div className="form-group">
-                  <label className="form-label" htmlFor="newPassword">New Password</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    name="newPassword"
-                    className={`form-input ${passwordErrors.newPassword ? 'error' : ''}`}
-                    value={passwordData.newPassword}
-                    onChange={handlePasswordChange}
-                    disabled={passwordLoading}
-                  />
-                  {passwordErrors.newPassword && <p className="form-error">{passwordErrors.newPassword}</p>}
-                </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="newPassword">New Password</label>
+                    <input
+                      type="password"
+                      id="newPassword"
+                      name="newPassword"
+                      className={`form-input ${passwordErrors.newPassword ? 'error' : ''}`}
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordChange}
+                      disabled={passwordLoading}
+                    />
+                    {passwordErrors.newPassword && <p className="form-error">{passwordErrors.newPassword}</p>}
+                  </div>
 
-                <div className="form-group">
-                  <label className="form-label" htmlFor="confirmNewPassword">Confirm New Password</label>
-                  <input
-                    type="password"
-                    id="confirmNewPassword"
-                    name="confirmNewPassword"
-                    className={`form-input ${passwordErrors.confirmNewPassword ? 'error' : ''}`}
-                    value={passwordData.confirmNewPassword}
-                    onChange={handlePasswordChange}
-                    disabled={passwordLoading}
-                  />
-                  {passwordErrors.confirmNewPassword && <p className="form-error">{passwordErrors.confirmNewPassword}</p>}
-                </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="confirmNewPassword">Confirm New Password</label>
+                    <input
+                      type="password"
+                      id="confirmNewPassword"
+                      name="confirmNewPassword"
+                      className={`form-input ${passwordErrors.confirmNewPassword ? 'error' : ''}`}
+                      value={passwordData.confirmNewPassword}
+                      onChange={handlePasswordChange}
+                      disabled={passwordLoading}
+                    />
+                    {passwordErrors.confirmNewPassword && <p className="form-error">{passwordErrors.confirmNewPassword}</p>}
+                  </div>
 
-                <div className="action-buttons">
-                  <button type="submit" className="btn btn-primary" disabled={passwordLoading}>
-                    {passwordLoading ? 'Changing...' : 'Change Password'}
-                  </button>
-                  <button type="button" className="btn btn-secondary" onClick={resetPassword} disabled={passwordLoading}>
-                    Cancel
-                  </button>
-                </div>
-              </form>
+                  <div className="action-buttons">
+                    <button type="submit" className="btn btn-primary" disabled={passwordLoading}>
+                      {passwordLoading ? 'Changing...' : 'Change Password'}
+                    </button>
+                    <button type="button" className="btn btn-secondary" onClick={resetPassword} disabled={passwordLoading}>
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>

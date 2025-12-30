@@ -233,6 +233,18 @@ a:hover {
   padding: 0 var(--spacing-md);
 }
 
+/* Profile Container */
+.profile-container {
+  max-width: 600px; /* Default for mobile */
+}
+
+/* Responsive */
+@media (min-width: 769px) {
+  .profile-container {
+    max-width: 1000px; /* Wider for desktop when using grid layout */
+  }
+}
+
 /* Auth Layout */
 .auth-container {
   display: flex;
@@ -720,6 +732,11 @@ a:hover {
   .search-input {
     width: 100%;
   }
+
+  /* Mobile Profile Forms Grid */
+  .profile-forms-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Action Buttons Group */
@@ -728,7 +745,21 @@ a:hover {
   gap: var(--spacing-xs);
 }
 
+/* Profile Forms Grid */
+.profile-forms-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-xl);
+}
+
 /* Responsive */
+@media (min-width: 769px) {
+  /* Desktop layout for profile page */
+  .profile-forms-grid {
+    grid-template-columns: 1fr 1fr; /* Two equal columns on desktop */
+  }
+}
+
 @media (max-width: 768px) {
   .navbar-content {
     flex-wrap: wrap;

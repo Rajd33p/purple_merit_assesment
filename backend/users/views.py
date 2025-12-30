@@ -76,6 +76,26 @@ def logout_view(request):
         return Response({'error': 'Failed to logout'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def token_refresh(request):
+    """Refresh access token using refresh token"""
+    try:
+        refresh_token = request.data.get('refresh')
+        if not refresh_token:
+            return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # This will raise an exception if the token is blacklisted or invalid
+        token = RefreshToken(refresh_token)
+        new_access_token = str(token.access_token)
+
+        return Response({
+            'access': new_access_token
+        }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': 'Token is invalid or blacklisted'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
 @api_view(['GET'])
 def get_user(request):
     serializer = UserSerializer(request.user)

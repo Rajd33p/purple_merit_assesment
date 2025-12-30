@@ -5,6 +5,7 @@ urlpatterns = [
     path('auth/signup/', views.signup, name='signup'),
     path('auth/login/', views.login_view, name='login'),
     path('auth/logout/', views.logout_view, name='logout'),
+    path('auth/refresh/', views.token_refresh, name='token_refresh'),  # POST
     path('auth/me/', views.get_user, name='get_user'),
 
     # User endpoints

@@ -120,7 +120,14 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://purple-merit-assesment-liart.vercel.app/",  # Your Vercel frontend URL
+    "https://rajd33p.tech",  # Your main domain
+    "https://www.rajd33p.tech",  # With www
+    # "http://localhost:5173",  # For development
+]
+
+# CORS_ALLOW_ALL_ORIGINS = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 

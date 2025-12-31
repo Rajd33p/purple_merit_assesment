@@ -113,11 +113,13 @@ VITE_API_URL=http://localhost:8000/api
 
 ## Deployment Instructions
 
+The application runs within a Dockerized environment and is exposed through an Nginx reverse proxy. Cloudflare handles SSL/TLS encryption, masks the origin server’s IP address, and adds protection and performance optimizations at the edge.
 ### Docker Deployment
 
 1. Build and run the containers:
 ```bash
-docker run <image-name>
+docker compose up -d
+
 ```
 
 2. For production, ensure you have proper environment variables set in a `.env` file
